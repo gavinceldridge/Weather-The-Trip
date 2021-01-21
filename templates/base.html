@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <!-- Lux Theme -->
-    <link rel="stylesheet" href="/static/lux-theme.css">
+    <!-- Bootstrap Theme -->
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
@@ -18,32 +18,64 @@
         crossorigin="anonymous" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="\static/fonts\craft-font\stylesheet.css">
     <link rel="stylesheet" href="/static/style.css">
-    <link rel="icon" type='image/png' href="/static/images/block.png">
+    <link rel="stylesheet" href="/static/googlemaps.css">
+
+    <!-- Google Maps Scripts -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initMap&libraries=&v=weekly"
+      defer
+    ></script>
+
     <title>{%block title%}{%endblock%}</title>
 </head>
 
 
 
-<body class="text-center">
+<body class='bg-dark'>
 
-    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
-      <header class="masthead mb-auto">
-        <div class="inner">
-          <h3 class="masthead-brand">Cover</h3>
-          <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link active" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Contact</a>
-          </nav>
+
+    <!-- Header -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark pt-4">
+        <div class="container-fluid">
+            <!-- Logo -->
+        <!-- <a class="navbar-brand" href="#">
+            <img src="/static/imgs/Weather-The-Trip.jpg" alt="" width="30" height="24">
+        </a> -->
+        <a class="navbar-brand" href="#">Weather The Trip</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </header>
+      </nav>
+      <hr>
 
       {%block body%}{%endblock%}
-
-
-
 
 
 

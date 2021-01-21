@@ -9,6 +9,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 # from forms import RegisterForm, LoginForm, ForgotPasswordForm, EditUserForm, ResetPasswordForm, AdminForm, BanAppealForm
 # # from pws import admin_pw, email_pw
 # from time import time
+from pws import GOOGLE_MAPS_KEY
 import os
 
 
@@ -30,4 +31,4 @@ debug = DebugToolbarExtension(app)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('testmaps.html', GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY)
