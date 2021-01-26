@@ -1,19 +1,33 @@
 {%extends 'base.html'%}
 
+{%block before_scripts%}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initMap&libraries=&v=weekly"
+    defer
+></script>
+<link rel="stylesheet" type="text/css" href="/static/css/googlemaps.css" />
+<script src='/static/js/googlemaps.js'></script>
+{%endblock%}
 {%block title%}Weather The Trip{%endblock%}
 
 
 {%block body%}
-
-<div class="container">
-    
-    <div id="map"></div>
-
+<div class='container-fluid'>
+    <div class='row mb-5'>
+        <div class="col-6 bg-primary">
+            <h1>1</h1>
+            
+        </div>
+        <div class="col-6 bg-success">
+            <h1>2</h1>
+        </div>
+    </div>
 </div>
+<div id="map"></div>
 
 
 {%endblock%}
 
-{%block scripts%}
-<script src='/static/js/googlemaps.js'></script>
+{%block after_scripts%}
 {%endblock%}
