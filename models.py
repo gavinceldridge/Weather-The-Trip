@@ -4,14 +4,16 @@ from flask_sqlalchemy import SQLAlchemy
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+
 def connect_db(app):
     """Connect to database."""
 
     db.app = app
-    db.init_app(app)    
+    db.init_app(app)
+
 
 class Trip(db.Model):
-    
+
     __tablename__ = 'trips'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -21,7 +23,9 @@ class Trip(db.Model):
     ending_longitude = db.Column(db.Text, nullable=False)
     ending_latitude = db.Column(db.Text, nullable=False)
 
-    weathers = db.relationship('Weather', secondary = 'trip_weathers', backref = 'trips')
+    # weathers = db.relationship(
+    #     'Weather', secondary='trip_weathers', backref='trips')
+
 
 class User(db.Model):
     """User in the system."""
@@ -94,6 +98,7 @@ class User(db.Model):
 
         return False
 
+
 class Weather(db.Model):
 
     __tablename__ = 'weathers'
@@ -101,12 +106,15 @@ class Weather(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text, nullable=False)
 
+
 class TripWeather(db.Model):
 
-    __tablename__='trip_weathers'
+    __tablename__ = 'trip_weathers'
     id = db.Column(db.Integer, primary_key=True)
-    weather_id = db.Column(db.Integer, db.ForeignKey('weathers'))
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips'))
+    weather_id = db.Column(
+        db.Integer, db.ForeignKey('weathers'), nullable=False)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips'), nullable=False)
+
 
 class UserTrip(db.Model):
     '''relationship between users and trips'''

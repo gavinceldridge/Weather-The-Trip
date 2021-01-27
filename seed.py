@@ -3,6 +3,9 @@
 from models import User, Trip, Weather, UserTrip, TripWeather, db
 from app import app
 
+app = Flask(__name__)
+db.init_app(app)
+
 # Create all tables
 db.drop_all()
 db.create_all()
@@ -18,11 +21,11 @@ TripWeather.query.delete()
 squirtle = User.register(first_name='Squirtle', last_name='Gang')
 
 squirtle_trip = Trip(
-        starting_latitude='start lat', 
-        starting_longitude='start lon', 
-        ending_latitude='ending lat', 
-        ending_longitude = 'ending lon'
-    )
+    starting_latitude='start lat',
+    starting_longitude='start lon',
+    ending_latitude='ending lat',
+    ending_longitude='ending lon'
+)
 
 db.session.add_all([squirtle, squirtle_trip])
 
