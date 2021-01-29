@@ -16,15 +16,38 @@ class Trip(db.Model):
 
     __tablename__ = 'trips'
 
-    id = db.Column(db.Integer, primary_key=True)
-
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     starting_longitude = db.Column(db.Text, nullable=False)
     starting_latitude = db.Column(db.Text, nullable=False)
     ending_longitude = db.Column(db.Text, nullable=False)
     ending_latitude = db.Column(db.Text, nullable=False)
+    user = db.relationship('User', secondary='user_trips', backref='trips')
 
-    # weathers = db.relationship(
-    #     'Weather', secondary='trip_weathers', backref='trips')
+
+class Weather(db.Model):
+
+    __tablename__ = 'weathers'
+
+    description = db.Column(db.Text, primary_key=True)
+
+
+class TripWeather(db.Model):
+
+    __tablename__ = 'trip_weathers'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    weather = db.relationship('weathers.description')
+    trip = db.relationship('Trip')
+
+
+class UserTrip(db.Model):
+    '''relationship between users and trips'''
+    __tablename__ = 'user_trips'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    user = db.relationship('User')
+    trip = db.relationship('Trip')
 
 
 class User(db.Model):
@@ -43,7 +66,13 @@ class User(db.Model):
         unique=True,
     )
 
-    username = db.Column(
+    first_name = db.Column(
+        db.Text,
+        nullable=False,
+        unique=True,
+    )
+
+    last_name = db.Column(
         db.Text,
         nullable=False,
         unique=True,
@@ -53,8 +82,6 @@ class User(db.Model):
         db.Text,
         nullable=False,
     )
-
-    trips = db.relationship('Trip', secondary='user_trips', backref='users')
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
@@ -98,27 +125,3 @@ class User(db.Model):
 
         return False
 
-
-class Weather(db.Model):
-
-    __tablename__ = 'weathers'
-
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.Text, nullable=False)
-
-
-class TripWeather(db.Model):
-
-    __tablename__ = 'trip_weathers'
-    id = db.Column(db.Integer, primary_key=True)
-    weather_id = db.Column(
-        db.Integer, db.ForeignKey('weathers'), nullable=False)
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips'), nullable=False)
-
-
-class UserTrip(db.Model):
-    '''relationship between users and trips'''
-    __tablename__ = 'user_trips'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users'), nullable=False)
-    trip_id = db.Column(db.Integer, db.ForeignKey('trips'), nullable=False)

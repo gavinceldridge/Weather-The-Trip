@@ -1,17 +1,22 @@
 {%extends 'base.html'%}
 
 {%block before_scripts%}
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initMap&libraries=&v=weekly"
-    defer></script>
+
+<!-- Google Maps -->
 <link rel="stylesheet" type="text/css" href="/static/css/googlemaps.css" />
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initMap&libraries=places&v=weekly"
+defer></script>
+<script src='/static/js/googlemaps.js'></script>
 {%endblock%}
 {%block title%}Weather The Trip{%endblock%}
 
 
 {%block body%}
+<input type="text" id='pac-input' class = 'controls' placeholder="Start typing here">
+<div id="map" style="height:30rem; width:100% "></div>
 <div class='container-fluid'>
-    <div class='row border-top'>
+    <!-- <div class='row border-top'>
         <div class="col-md-6 col-sm-12  bg-dark">
             <form id='search-form'>
                 {{location_form.csrf_token}}
@@ -37,13 +42,14 @@
         <div class=" col-md-6 col-sm-12 bg-dark">
             <h1>2</h1>
         </div>
-    </div>
+    </div> -->
 
-    <div class="row" style="height:100%;">
+    <!-- <input type="text" id='pac-input' placeholder="Start typing here">
+    <div id="map" style="height:30rem; width:100% "></div> -->
+    <!-- <div class="row" style="height:100%;">
 
         <div class="col-md-9 col-sm-12" style="height:100%; width:100%; padding:0px">
             <div style="height:100%; width:100%;" class='d-flex justify-content-center'>
-                <div id="map" style="height:30rem; width:100% "></div>
             </div>
         </div>
 
@@ -51,7 +57,7 @@
 
         </div>
 
-    </div>
+    </div> -->
     <!-- <div id="map"></div> -->
 
 
@@ -62,5 +68,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
         integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
         crossorigin="anonymous"></script>
-    <script src='/static/js/googlemaps.js'></script>
     {%endblock%}

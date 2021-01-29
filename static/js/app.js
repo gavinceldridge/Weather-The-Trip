@@ -1,6 +1,9 @@
 $(document).ready(function () {
 
 
+    const locationSearch = (value) => {
+        
+    }
 
     $('#search-form').submit(function (evt) {
         evt.preventDefault();

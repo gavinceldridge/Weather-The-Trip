@@ -1,10 +1,9 @@
 """Seed file to generate basic data in DB"""
 
-from models import User, Trip, Weather, UserTrip, TripWeather, db
 from app import app
+from models import User, Trip, Weather, UserTrip, TripWeather, db
 
-app = Flask(__name__)
-db.init_app(app)
+# db.init_app(app)
 
 # Create all tables
 db.drop_all()
@@ -18,7 +17,7 @@ UserTrip.query.delete()
 TripWeather.query.delete()
 
 # Add users
-squirtle = User.register(first_name='Squirtle', last_name='Gang')
+squirtle = User.register(first_name='Squirtle', last_name='Gang', email='test@test.com', password='password')
 
 squirtle_trip = Trip(
     starting_latitude='start lat',

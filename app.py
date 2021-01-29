@@ -20,42 +20,13 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = 'verysecret'
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
 
+db.init_app(app)
 
 debug = DebugToolbarExtension(app)
 
 
 @app.route('/')
 def home():
-
-    # Create all tables
-    db.drop_all()
-    db.create_all()
-
-    # If table isn't empty, empty it
-    User.query.delete()
-    Trip.query.delete()
-    Weather.query.delete()
-    UserTrip.query.delete()
-    TripWeather.query.delete()
-
-    # Add users
-    squirtle = User.register(first_name='Squirtle', last_name='Gang')
-
-    squirtle_trip = Trip(
-        starting_latitude='start lat',
-        starting_longitude='start lon',
-        ending_latitude='ending lat',
-        ending_longitude='ending lon'
-    )
-
-    db.session.add_all([squirtle, squirtle_trip])
-
-    db.session.commit()
-
-    user_trip = UserTrip(user_id=squirtle.id, trip_id=squirtle_trip.id)
-
-    db.session.add(user_trip)
-    db.session.commit()
 
     location_form = LocationForm()
     trip_form = TripForm()
