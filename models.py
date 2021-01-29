@@ -27,8 +27,8 @@ class Trip(db.Model):
 class Weather(db.Model):
 
     __tablename__ = 'weathers'
-
-    description = db.Column(db.Text, primary_key=True)
+    code = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.Text)
 
 
 class TripWeather(db.Model):
@@ -36,7 +36,10 @@ class TripWeather(db.Model):
     __tablename__ = 'trip_weathers'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
-    weather = db.relationship('weathers.description')
+    weather_code = db.Column(db.Integer, db.ForeignKey(
+        'weathers.code'), nullable=False)
+    time = db.Column(db.DateTime, nullable=False)
+    weather = db.relationship('Weather')
     trip = db.relationship('Trip')
 
 
@@ -57,56 +60,55 @@ class User(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True,
+        primary_key=True
+    )
+
+    first_name = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    last_name = db.Column(
+        db.Text,
+        nullable=False
     )
 
     email = db.Column(
         db.Text,
         nullable=False,
-        unique=True,
-    )
-
-    first_name = db.Column(
-        db.Text,
-        nullable=False,
-        unique=True,
-    )
-
-    last_name = db.Column(
-        db.Text,
-        nullable=False,
-        unique=True,
+        unique=True
     )
 
     password = db.Column(
         db.Text,
-        nullable=False,
+        nullable=False
     )
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
 
     @classmethod
-    def signup(cls, username, email, password, image_url):
+    def signup(cls, first_name, last_name, email, password):
         """Sign up user.
 
         Hashes password and adds user to system.
         """
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+        # import pdb
+        # pdb.set_trace()
 
         user = User(
-            username=username,
+            first_name=first_name,
+            last_name=last_name,
             email=email,
-            password=hashed_pwd,
-            image_url=image_url,
+            password=hashed_pwd
         )
 
-        db.session.add(user)
         return user
 
     @classmethod
-    def authenticate(cls, username, password):
+    def authenticate(cls, email, password):
         """Find user with `username` and `password`.
 
         This is a class method (call it on the class, not an individual user.)
@@ -116,7 +118,7 @@ class User(db.Model):
         If can't find matching user (or if password is wrong), returns False.
         """
 
-        user = cls.query.filter_by(username=username).first()
+        user = cls.query.filter_by(email=email).first()
 
         if user:
             is_auth = bcrypt.check_password_hash(user.password, password)
@@ -124,4 +126,3 @@ class User(db.Model):
                 return user
 
         return False
-

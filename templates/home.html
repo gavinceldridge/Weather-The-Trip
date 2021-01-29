@@ -5,16 +5,17 @@
 <!-- Google Maps -->
 <link rel="stylesheet" type="text/css" href="/static/css/googlemaps.css" />
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initMap&libraries=places&v=weekly"
-defer></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
+    defer></script>
 <script src='/static/js/googlemaps.js'></script>
 {%endblock%}
 {%block title%}Weather The Trip{%endblock%}
 
 
 {%block body%}
-<input type="text" id='pac-input' class = 'controls' placeholder="Start typing here">
-<div id="map" style="height:30rem; width:100% "></div>
+<input type="text" id='pac-input' class='controls' placeholder="Start typing here">
+<div id="map" style="height:90%; width:100% "></div>
 <div class='container-fluid'>
     <!-- <div class='row border-top'>
         <div class="col-md-6 col-sm-12  bg-dark">
