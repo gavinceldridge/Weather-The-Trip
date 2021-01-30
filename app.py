@@ -12,17 +12,17 @@ import os
 
 app = Flask(__name__)
 # DEVELOPMENT
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///weather_the_trip'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///weather_the_trip')
 db.init_app(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_ECHO'] = True
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+# app.config['SQLALCHEMY_ECHO'] = True
 # use secret key in production or default to our dev one
-app.config['SECRET_KEY'] = 'verysecret'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'backupkey')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
+debug = DebugToolbarExtension(app)
 
 db.init_app(app)
 
-debug = DebugToolbarExtension(app)
 
 
 @app.before_request
