@@ -25,7 +25,6 @@ function initAutocomplete() {
     // more details for that place.
     searchBox.addListener("places_changed", () => {
         const places = searchBox.getPlaces();
-
         if (places.length == 0) {
             return;
         }
@@ -58,6 +57,7 @@ function initAutocomplete() {
                 })
             );
 
+
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
@@ -66,6 +66,8 @@ function initAutocomplete() {
             }
         });
         map.fitBounds(bounds);
+        console.log(searchBox.getPlaces())
+        
     });
 }
 

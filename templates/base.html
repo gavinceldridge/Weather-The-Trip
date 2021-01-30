@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-    <!-- Bootstrap Theme -->
-    <link rel="stylesheet" href="/static/css/bootstrap.css">
-
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
@@ -22,6 +19,10 @@
 
     <!-- Footer CSS (from https://bbbootstrap.com/snippets/simple-footer-social-media-icons-37929510) -->
     <link rel="stylesheet" href="/static/css/footer.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+
     <title>{%block title%}{%endblock%}</title>
 </head>
 
@@ -31,7 +32,7 @@
 
 
     <!-- Header -->
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark mb-3">
         <div class="container-fluid">
             <!-- Logo -->
             <!-- <a class="navbar-brand" href="#">
@@ -60,32 +61,33 @@
                 <ul class="navbar-nav ml-auto">
                     {%if user%}
                     <!-- Show greeting if user is not logged in -->
-                    <li class='nav-item'> <a href="/user" class="nav-link"> Hello {{user.first_name}} <i
+                    <li class='nav-item'> <a href="/user" class="nav-link text-light"> Hello {{user.first_name}} <i
                                 class="fas fa-user"></i> </a></li>
-                    <li class='nav-item'> <a href="/logout" class='nav-link'>Logout</a></li>
+                    <li class='nav-item'> <a href="/logout" class='nav-link text-light'>Logout</a></li>
                     {%else%}
                     <!-- Allow user to login/signup if not logged in -->
-                    <form class="form-inline" id='login-form' action="/login" method='POST'>
-                        {{login_form.csrf_token}}
-                        {{login_form.hidden_tag()}}
-                        <div class="input-group">
-                            {{login_form.email(id='email_input', class_='form-control', placeholder='Email',
-                            )}}
-                            {{login_form.password(id='password_input', class_='form-control', placeholder='Password')}}
-                            <input type="submit" class='form-control btn btn-success' value='Log in'>
-                        </div>
-                        {% for field in login_form
-                        if field.widget.input_type != 'hidden' %}
-                        <p>
-                            {% for error in field.errors %}
-                            {{ error }}
+                    <div class="input-group d-flex align-content-center">
+                        <form class="form-inline" id='login-form' action="/login" method='POST'>
+                            {{login_form.csrf_token}}
+                            {{login_form.hidden_tag()}}
+                            <li class="nav-item">{{login_form.email(id='email_input', class_='form-control text-light', placeholder='Email',
+                                )}}</li>
+                            <li class="nav-item ml-1">{{login_form.password(id='password_input', class_='form-control', placeholder='Password')}}</li>
+                            <li class="nav-item ml-1"><input type="submit" class='form-control btn btn-success' value='Log in'></li>
+
+                            {% for field in login_form
+                                if field.widget.input_type != 'hidden' %}
+                                <p>
+                                    {% for error in field.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </p>
                             {% endfor %}
-                        </p>
-                        {% endfor %}
-                    </form>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#"> <button class='btn btn-info'>Signup</button></a>
-                    </li>
+                        </form>
+                    </div>
+                                <li class="nav-item">
+                                    <a class="nav-link " href="#"> <button class='btn btn-info'>Signup</button></a>
+                                </li>
                     {%endif%}
                 </ul>
             </div>
@@ -97,8 +99,6 @@
         {% for category, message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %}
-
-
     </div>
     {%block body%}{%endblock%}
 

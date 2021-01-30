@@ -9,5 +9,6 @@ $(document).ready(function () {
         evt.preventDefault();
         locationSearch($('#location_input').get()[0].value);
     });
+    
 
 });
