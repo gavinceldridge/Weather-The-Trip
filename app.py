@@ -6,9 +6,11 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
 from forms import TripForm, LocationForm, LoginForm
-from pws import GOOGLE_MAPS_KEY
 import os
-
+try:
+    from pws import GOOGLE_MAPS_KEY
+except:
+    GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 
 app = Flask(__name__)
 # DEVELOPMENT
