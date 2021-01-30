@@ -1,11 +1,11 @@
-from flask import Flask, request, redirect, render_template, flash, session
+from flask import Flask, request, redirect, render_template, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 # from flask_wtf import FlaskForm
 # from flask_mail import Message, Mail
 # from threading import Thread
 
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
-from forms import TripForm, LocationForm
+from forms import TripForm, LocationForm, LoginForm
 from pws import GOOGLE_MAPS_KEY
 import os
 
@@ -25,9 +25,37 @@ db.init_app(app)
 debug = DebugToolbarExtension(app)
 
 
+@app.before_request
+def before_request():
+    if 'email' in session:
+        g.user = User.query.filter(User.email == session['email']).first()
+    else:
+        g.user = None
+
+
 @app.route('/')
 def home():
+    login_form = LoginForm()
+    return render_template('home.html', login_form=login_form, GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY, user=g.user)
 
-    location_form = LocationForm()
-    trip_form = TripForm()
-    return render_template('home.html', GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY, location_form=location_form, trip_form=trip_form)
+
+@app.route('/login', methods=['POST'])
+def login():
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        email = login_form.email.data
+        password = login_form.password.data
+        user = User.authenticate(email, password)
+
+        if(user):
+            session['email'] = user.email
+        else:
+            flash('Incorrect email or password!', 'danger')
+
+    return redirect('/')
+
+
+@app.route('/logout')
+def logout():
+    session['email'] = None
+    return redirect('/')

@@ -16,57 +16,12 @@
 {%block body%}
 <input type="text" id='pac-input' class='controls' placeholder="Start typing here">
 <div id="map" style="height:90%; width:100% "></div>
-<div class='container-fluid'>
-    <!-- <div class='row border-top'>
-        <div class="col-md-6 col-sm-12  bg-dark">
-            <form id='search-form'>
-                {{location_form.csrf_token}}
-                {{ location_form.hidden_tag() }}
-                <div class='text-center mt-2'>
-                    <span class='text-light font-weight-bold'>Location:
-                    </span>{{location_form.location(id='location_input')}}
-                    <button type="submit" class='btn btn-primary'>Search</button>
-                </div>
-
-                {% for field in location_form
-                if field.widget.input_type != 'hidden' %}
-                <p>
-                    {% for error in field.errors %}
-                    {{ error }}
-                    {% endfor %}
-                </p>
-                {% endfor %}
 
 
-            </form>
-        </div>
-        <div class=" col-md-6 col-sm-12 bg-dark">
-            <h1>2</h1>
-        </div>
-    </div> -->
+{%endblock%}
 
-    <!-- <input type="text" id='pac-input' placeholder="Start typing here">
-    <div id="map" style="height:30rem; width:100% "></div> -->
-    <!-- <div class="row" style="height:100%;">
-
-        <div class="col-md-9 col-sm-12" style="height:100%; width:100%; padding:0px">
-            <div style="height:100%; width:100%;" class='d-flex justify-content-center'>
-            </div>
-        </div>
-
-        <div class="col-md-3 bg-warning" id='results'>
-
-        </div>
-
-    </div> -->
-    <!-- <div id="map"></div> -->
-
-
-
-    {%endblock%}
-
-    {%block after_scripts%}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-        crossorigin="anonymous"></script>
-    {%endblock%}
+{%block after_scripts%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+    crossorigin="anonymous"></script>
+{%endblock%}
