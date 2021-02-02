@@ -1,6 +1,8 @@
 {%extends 'base.html'%}
 
 {%block before_scripts%}
+<!-- Custom JS -->
+<script src='/static/js/app.js'></script>
 
 <!-- Google Maps -->
 <link rel="stylesheet" type="text/css" href="/static/css/googlemaps.css" />
@@ -9,6 +11,7 @@
     src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
     defer></script>
 <script src='/static/js/googlemaps.js'></script>
+
 {%endblock%}
 {%block title%}Weather The Trip{%endblock%}
 
@@ -21,16 +24,40 @@
 <div class="container-fluid">
     <div class="row" style="height:100%;">
         <div class="col-md-6 col-lg-2 sidebar">
-            <div class='d-flex align-items-start justify-items-center'>
+            <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
+            <div class='d-flex align-items-center justify-items-center'>
 
-                <ul class="list-group directions-list">
+
+                <!-- <button class='btn btn-primary'>Confirm</button> -->
+                <form>
+                    {{directions_form.csrf_token}}
+                    {{directions_form.hidden_tag()}}
+
+                    <div class="form-group">
+                        <div class="input-group mb-3" id='direction-inputs'>
+                            <div class="input-group-append">
+                                {{directions_form.start(id='origin', placeholder='Origin', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='origin-trash' ><i class="fas fa-trash-alt"></i></button>
+                                <!-- <input class="form-control" type="text" id='origin-input' placeholder="Origin" readonly> <button class='badge badge-danger' id='origin-trash' style='height: 50%;'><i class="fas fa-trash-alt"></i></button> -->
+                            </div>
+                            <div class="input-group-append">
+                                {{directions_form.end(id='destination', placeholder='Destination', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='destination-trash'><i class="fas fa-trash-alt"></i></button>
+
+                                <!-- <input class="form-control" type="text" id='destination-input' placeholder="Destination" readonly> <button class='badge badge-danger' id='destination-trash' style='height: 50%;'><i class="fas fa-trash-alt"></i></button> -->
+                            </div>
+                        </div>
+                        <!-- <label for="origin">Origin</label> -->
+                        <input type="submit" class='btn btn-primary mt-3' id='submit-calculations'>
+                    </div>
+                </form>
+
+                <!-- <ul class="list-group directions-list">
                     <li class="list-group-item active"><b>Start: </b></li>
                     <li class="list-group-item"><b>End: </b></li>
                     <li class='list-group-item mt-1 mb-3'><b>Current :</b> </li>
                     <button class="btn btn-primary mb-2">Add Location</button>
                     <button class='btn btn-primary'>Confirm</button>
-                    <button class='btn btn-primary mt-2'>Get Weather Report</button>
-                </ul>
+                    <button class='btn btn-primary mt-2'>Results</button>
+                </ul> -->
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="height:100%; width:100%;">
@@ -48,7 +75,4 @@
 {%endblock%}
 
 {%block after_scripts%}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-    integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-    crossorigin="anonymous"></script>
 {%endblock%}

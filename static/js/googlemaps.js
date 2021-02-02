@@ -6,12 +6,30 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+function test(){
+    console.log('test');
+}
+
+
 function initAutocomplete() {
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
     const map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 37.7749, lng: -122.4194 },
         zoom: 8,
         mapTypeId: "roadmap",
     });
+    directionsRenderer.setMap(map);
+    
+    const onSubmitHandler = function (evt) {
+        evt.preventDefault();
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+    };
+
+    document.getElementById('submit-calculations').addEventListener('click', onSubmitHandler);
+
+
     // Create the search box and link it to the UI element.
     const input = document.getElementById("pac-input");
     const searchBox = new google.maps.places.SearchBox(input);
@@ -66,9 +84,54 @@ function initAutocomplete() {
             }
         });
         map.fitBounds(bounds);
-        console.log(searchBox.getPlaces())
+
+        const formatted_address = searchBox.getPlaces()[0].formatted_address;        
+        append_to_current_direction(formatted_address);
         
     });
 }
 
+function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+    directionsService.route(
+      {
+        origin: {
+          query: document.getElementById("origin").value,
+        },
+        destination: {
+          query: document.getElementById("destination").value,
+        },
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (response, status) => {
+        if (status === "OK") {
+          directionsRenderer.setDirections(response);
+          console.log(response);
+        } else {
+          window.alert("Directions request failed due to " + status);
+        }
+      }
+    );
+  }
 
+
+const update_current_label = ($current)=>{
+    $inputDivs = $('.input-group-append').get()
+    $inputDivs.forEach((element)=>{
+        value = element.children[0].value;
+        if(value === ''){
+            console.log(value);
+            $('#current-label')[0].innerText = element.children[0].placeholder;
+            return;
+        }
+    });
+
+}
+
+const append_to_current_direction = (address)=>{
+    $current = $('#current-label').get()[0].innerText.toLowerCase();
+    // console.log($(`#${current}-input`))
+    $(`#${$current}`).get()[0].value=address;
+
+    update_current_label($current);
+
+}

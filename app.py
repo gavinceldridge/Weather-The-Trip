@@ -6,6 +6,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
 from forms import TripForm, LocationForm, LoginForm
+from api import api
 import os
 try:
     from pws import GOOGLE_MAPS_KEY
@@ -13,6 +14,7 @@ except:
     GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 
 app = Flask(__name__)
+app.register_blueprint(api)
 # DEVELOPMENT
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///weather_the_trip')
 db.init_app(app)
@@ -38,7 +40,8 @@ def before_request():
 @app.route('/')
 def home():
     login_form = LoginForm()
-    return render_template('home.html', login_form=login_form, GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY, user=g.user)
+    directions_form = TripForm()
+    return render_template('home.html', directions_form=directions_form, login_form=login_form, GOOGLE_MAPS_KEY=GOOGLE_MAPS_KEY, user=g.user)
 
 
 @app.route('/login', methods=['POST'])
