@@ -102,10 +102,12 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         },
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      (response, status) => {
+      function (response, status) {
         if (status === "OK") {
-          directionsRenderer.setDirections(response);
-          console.log(response);
+            directionsRenderer.setDirections(response);
+            console.log(response);
+            const parsedResponse = parseResponseForLocations(response);
+            axios.get('/get-weather-report', parsedResponse);
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -133,5 +135,36 @@ const append_to_current_direction = (address)=>{
     $(`#${$current}`).get()[0].value=address;
 
     update_current_label($current);
+}
+
+//Function to store various locations to check in the weather api and at which times
+class timeLocation{
+    constructor(time, location){
+        this.time = time;
+        this.location = location;
+    }
+}
+
+const parseResponseForLocations = (response)=>{
+
+    // console.log(response);
+    let startTime = new Date().toISOString();
+
+    //regex to match JS Date UTC time to the weather UTC time
+    startTime = startTime.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
+    console.log(startTime);
+    
+    // let currentTime = startTime;
+    const distance = response.routes[0].legs[0].distance.text;
+    const totalDistance = parseInt(distance.substring(0, distance.length-3));
+    currentDistance = 0;
+    // initial_location = 
+    steps = response.routes[0].legs[0].steps;
+    console.log(`Steps: ${steps}`);
+    steps.forEach((step)=>{
+        console.log(step);
+
+    });
+    console.log('done');
 
 }

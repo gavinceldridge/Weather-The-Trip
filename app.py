@@ -18,7 +18,7 @@ app.register_blueprint(api)
 # DEVELOPMENT
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///weather_the_trip')
 db.init_app(app)
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_ECHO'] = True
 # use secret key in production or default to our dev one
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'backupkey')

@@ -1,9 +1,15 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from forms import TripForm
 import requests
 from pws import GOOGLE_MAPS_KEY
 
 api = Blueprint('api', __name__, template_folder="templates")
+
+
+try:
+    from pws import WEATHER_KEY
+except:
+    WEATHER_KEY = os.environ.get('WEATHER_KEY')
 
 
 @api.route("/directions")
@@ -15,3 +21,15 @@ def index():
         result = requests.get(f'https://maps.googleapis.com/maps/api/directions/json?origin={origin}?destination={destination}?key={GOOGLE_MAPS_KEY}')
         return result
     return jsonify({'result': 'Form Incomplete'})
+
+@api.route('/get-weather-report')
+def weather():
+    # latitude = request.args.get('lat')
+    # longitude = request.args.get('lon')
+    # expected_time = request.args.get('time')
+    data = request.get_json('response')
+    import pdb
+    pdb.set_trace()
+    return jsonify({'test':'this'})
+
+    
