@@ -137,34 +137,96 @@ const append_to_current_direction = (address)=>{
     update_current_label($current);
 }
 
-//Function to store various locations to check in the weather api and at which times
-class timeLocation{
-    constructor(time, location){
-        this.time = time;
-        this.location = location;
-    }
-}
-
 const parseResponseForLocations = (response)=>{
 
-    // console.log(response);
-    let startTime = new Date().toISOString();
+    const result = {times: {}, locations: {}, latitude: {}, longitude: {}};
 
+    let startTime = new Date().toISOString();
     //regex to match JS Date UTC time to the weather UTC time
     startTime = startTime.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
     console.log(startTime);
     
-    // let currentTime = startTime;
+    const totalTime = response.routes[0].legs[0].duration.text;
     const distance = response.routes[0].legs[0].distance.text;
-    const totalDistance = parseInt(distance.substring(0, distance.length-3));
-    currentDistance = 0;
-    // initial_location = 
+    const totalMiles = parseFloat(distance.substring(0, distance.length-3));
     steps = response.routes[0].legs[0].steps;
-    console.log(`Steps: ${steps}`);
-    steps.forEach((step)=>{
-        console.log(step);
+    
+    //Start time/location
+    let counter = 0;
+    result.times[counter] = startTime;
+    result.locations[counter] = response.routes[0].legs[0].start_address;
+    counter++;
 
+    let minutesTillOneHour = 60;
+    let feetTillMile = 5280;
+    
+    
+    /*
+    BEFORE HITTING THE 1 HR MARK:
+        Each mile, record a timestamp of where the driver *should* be
+        and add to the array.
+        Reset currentFeet to 0
+
+    AFTER HITTING 1 HR MARK:
+        Each hour, record a timestamp of where the driver *should* be
+        and add to the array.
+        
+    UPDATE TIME   
+    
+    */
+    steps.forEach((step)=>{
+
+
+        //have hit 1 hour mark?
+        if(minutesTillOneHour > 0){
+
+            let [miles, feet] = breakUpStepDistance(step);
+            console.log(`miles:${miles} \t feet:${feet}`);
+            feetTillMile += feet;
+            while(feetTillMile >= 5280){
+                miles++;
+                feetTillMile-=5280;
+            }
+
+        }else{
+
+        }
+        
+
+        //get distance for step:
+        const distance = step.distance.text;
+        const isFeet = parseInt(distance.substring(distance.length-2, distance.length));
+        if(isFeet){
+
+        }else{
+
+        }
+        
+        // updateTime(currentTime);
     });
-    console.log('done');
+    return result;
+}
+
+const updateTime = (time, minute, hour, day, year)=>{
+    //add minute hour day year to the corresponding spot of updateTime
+    newTime = time.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/g);
+
+    return newTime;
+}
+
+const breakUpStepDistance = (step)=>{
+
+    const distance = step.distance.text;
+    let miles = 0;
+    let feet = 0;
+    if(distance.includes('mi')){
+        miles = parseFloat(distance.match(/(\d+.\d+)\smi/)[1]);
+    }
+    
+    if(distance.includes('ft')){
+        feet = parseFloat(distance.match(/(\d+.\d+)\sft/)[1]);
+    }
+
+    return [miles, feet];
 
 }
