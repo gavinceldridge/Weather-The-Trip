@@ -3,11 +3,12 @@ from flask_debugtoolbar import DebugToolbarExtension
 # from flask_wtf import FlaskForm
 # from flask_mail import Message, Mail
 # from threading import Thread
-
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
 from forms import TripForm, LocationForm, LoginForm
 from api import api
 import os
+
+
 try:
     from pws import GOOGLE_MAPS_KEY
 except:

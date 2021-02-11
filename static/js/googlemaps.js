@@ -7,11 +7,6 @@
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
-function test(){
-    console.log('test');
-}
-
-
 function initAutocomplete() {
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer();
@@ -137,50 +132,77 @@ const append_to_current_direction = (address)=>{
     update_current_label($current);
 }
 
-const parseResponseForLocations = (response)=>{
-
-    const result = {times: {}, locations: {}, latitude: {}, longitude: {}};
-
-    let startTime = new Date().toISOString();
+const formatDateForWeatherBit = (time)=>{
     //regex to match JS Date UTC time to the weather UTC time
-    startTime = startTime.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
-    console.log(startTime);
-    
-    const totalTime = response.routes[0].legs[0].duration.text;
-    const distance = response.routes[0].legs[0].distance.text;
-    const totalMiles = parseFloat(distance.substring(0, distance.length-3));
-    steps = response.routes[0].legs[0].steps;
-    
-    //Start time/location
-    let counter = 0;
-    result.times[counter] = startTime;
-    result.locations[counter] = response.routes[0].legs[0].start_address;
-    counter++;
+    time = time.toISOString();
+    time = time.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
+    return time;
+}
 
+const extractHoursMinutes = (duration)=>{
+    let minutes = 0;
+    let hours = 0;
+
+    if(duration.includes('hour')){
+        hours = parseInt(duration.match(/(\d+)\shour/)[1]);
+    }
+    if(duration.includes('min')){
+        minutes = parseInt(duration.match(/(\d+)\min/)[1]);
+    }
+    return [minutes, hours];
+}
+
+const parseResponseForLocations = (response)=>{
+    //NOTE: result's first 2 values are predetermined to be the end pt and start pt respectively
+    const result = {times: {}, locations: {}};
+
+    // let startTime = new Date().toISOString();
+    let time = new Date();
+
+    let endTime = time;
+    let tripDuration = response.routes[0].legs[0].duration;
+
+    //add end pt and time to the result as result[0]
+    [minutes, hours] = extractHoursMinutes(tripDuration);
+    endTime.setHours(endTime.getHours() + hours);
+    endTime.setMinutes(endTime.getMinutes() + minutes);
+    result.times[0] = formatDateForWeatherBit(endTime);
+    result.location[0] = response.routes[0].legs[0].end_address;
+    
+    // add start time/location to the result as result[1]
+    result.times[1] = formatDateForWeatherBit(time);
+    result.locations[1] = response.routes[0].legs[0].start_address;
+    let counter = 2;
+    
     let minutesTillOneHour = 60;
     let feetTillMile = 5280;
     
     
     /*
     BEFORE HITTING THE 1 HR MARK:
-        Each mile, record a timestamp of where the driver *should* be
-        and add to the array.
-        Reset currentFeet to 0
-
+    Each mile, record a timestamp of where the driver *should* be
+    and add to the array.
+    Reset currentFeet to 0
+    
     AFTER HITTING 1 HR MARK:
-        Each hour, record a timestamp of where the driver *should* be
-        and add to the array.
-        
+    Each hour, record a timestamp of where the driver *should* be
+    and add to the array.
+    
     UPDATE TIME   
     
     */
-    steps.forEach((step)=>{
+   let miles = 0;
+   let feet = 0;
+   steps = response.routes[0].legs[0].steps;
+   steps.forEach((step)=>{
 
 
         //have hit 1 hour mark?
         if(minutesTillOneHour > 0){
 
-            let [miles, feet] = breakUpStepDistance(step);
+            [stepMiles, stepFeet] = breakUpStepDistance(step);
+            miles+=stepMiles;
+            feet+=stepFeet;
             console.log(`miles:${miles} \t feet:${feet}`);
             feetTillMile += feet;
             while(feetTillMile >= 5280){
@@ -188,6 +210,24 @@ const parseResponseForLocations = (response)=>{
                 feetTillMile-=5280;
             }
 
+            if(miles >= 10){
+                //calculate time/distance for step with multiple miles:
+                const milesOnStepPath = step.distance.text.match(/(\d+)mi/)[1];
+
+
+            }else if(miles>=1){
+                //calc time/distance for step with singular mile
+            }
+
+
+
+            //update time
+            stepTime = step.duration.text;
+            if(!stepTime.includes('hour')){//must just be minutes
+                minutesTillOneHour -= parseInt(stepTime.substring(0, stepTime.length-5));
+            }else{
+                minutesTillOneHour = 0;
+            }
         }else{
 
         }
@@ -202,7 +242,6 @@ const parseResponseForLocations = (response)=>{
 
         }
         
-        // updateTime(currentTime);
     });
     return result;
 }
@@ -220,7 +259,7 @@ const breakUpStepDistance = (step)=>{
     let miles = 0;
     let feet = 0;
     if(distance.includes('mi')){
-        miles = parseFloat(distance.match(/(\d+.\d+)\smi/)[1]);
+        matches = parseFloat(distance.match(/(\d+.\d+)\smi/)[1]);
     }
     
     if(distance.includes('ft')){
