@@ -179,26 +179,115 @@ const parseResponseForLocations = (response)=>{
     
     
     /*
+    BEFORE HITTING THE 1 HR MARK:
+    Each mile, record a timestamp of where the driver *should* be
+    and add to the array.
+    Reset currentFeet to 0
     
-    UPDATE TIME
-
-    Then, for each hour, record a timestamp of where the driver *should* be
+    AFTER HITTING 1 HR MARK:
+    Each hour, record a timestamp of where the driver *should* be
     and add to the array.
     
+    UPDATE TIME   
     
     */
-    let miles = 0;
-    let feet = 0;
-    steps = response.routes[0].legs[0].steps;
-    steps.forEach((step)=>{
+   let miles = 0;
+   let feet = 0;
+   steps = response.routes[0].legs[0].steps;
+   steps.forEach((step)=>{
 
+
+        //have hit 1 hour mark?
+        /*if(minutesTillOneHour > 0){
+
+            [stepMiles, stepFeet] = breakUpStepDistance(step);
+            miles+=stepMiles;
+            feet+=stepFeet;
+            console.log(`miles:${miles} \t feet:${feet}`);
+            feetTillMile += feet;
+            while(feetTillMile >= 5280){
+                miles++;
+                feetTillMile-=5280;
+            }
+
+            let locationCountForStep = 0; 
+            while(miles >= 10){
+                //calculate time/distance for step with multiple miles:
+                locationCountForStep++;
+                miles-=10;
+            }
+
+            const responseForStep = extractLocationsForStep(locationCountForStep, step, time);
+            //returns a list of 3 lists with corresponding indexes
+            //first list: latitude
+            //second list: longitude
+            //third list: estimated time at each lat/long
+
+            for(let i = 0; i < responseForStep[0].length; i++){
+                result.locations[resultCounter] = `${responseForStep[0][i]}, ${responseForStep[1][i]}`;
+                result.times[resultCounter] = responseForStep[2][i];
+                resultCounter++;
+            }
+
+            //update time
+            stepDuration = step.duration.text;
+            if(!stepDuration.includes('hour')){//must just be minutes
+                minutesTillOneHour -= parseInt(stepDuration.substring(0, stepDuration.length-5));
+            }else{
+                minutesTillOneHour = 0;
+            }
+
+
+        }else{//2nd phase, check location/place every hr
+
+        }*/
+        
         //update time
         const [minutes, hours] = extractHoursMinutes(step.duration.text);
-        time.setMinutes(time.getMinutes() + minutes);
-        time.setHours(time.getHours() + hours);
-
-        
-        
     });
     return result;
 }
+/*
+const extractLocationsForStep = (locationCount, step, currentTime) => {
+    const lats = [];
+    const lngs = [];
+    const times = [];
+    //Estimate corresponding times for the locations
+    //Assume that each 10 miles (aka each lat/lng) = ~10 minutes
+
+     
+    const stepDuration = step.duration.text;
+    if(locationCount === 1){
+        lats.push(step.path[step.path/2].lat());
+        lngs.push(step.path[step.path/2].lng());
+        currentTime.setMinutes(currentTime.getMinutes() + 10)
+        times.push(currentTime);
+    }else if(locationCount > 1){
+        const stepPathLength = step.path.length;
+        const pathLocationsRatio = stepPathLength/locationCount;
+        for(let i = 0; i < locationCount; i++){
+            lats.push(step.path[i*pathLocationsRatio].lat());
+            lngs.push(step.path[i*pathLocationsRatio].lng());
+            currentTime.setMinutes(currentTime.getMinutes() + 10);
+            times.push(currentTime); 
+        }
+    }
+    return [lats, lngs];
+}
+
+const breakUpStepDistance = (step)=>{
+
+    const distance = step.distance.text;
+    let miles = 0;
+    let feet = 0;
+    if(distance.includes('mi')){
+        matches = parseFloat(distance.match(/(\d+.\d+)\smi/)[1]);
+    }
+    
+    if(distance.includes('ft')){
+        feet = parseFloat(distance.match(/(\d+.\d+)\sft/)[1]);
+    }
+
+    return [miles, feet];
+
+}*/
