@@ -244,6 +244,8 @@ const parseResponseForLocations = (response)=>{
         
         //update time
         const [minutes, hours] = extractHoursMinutes(step.duration.text);
+        time.setMinutes(time.getMinutes() + minutes);
+        time.setHours(time.getHours() + hours);
     });
     return result;
 }

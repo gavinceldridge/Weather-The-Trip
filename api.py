@@ -22,14 +22,18 @@ def index():
         return result
     return jsonify({'result': 'Form Incomplete'})
 
-@api.route('/get-weather-report')
+@api.route('/get-weather-report', methods=['POST'])
 def weather():
     # latitude = request.args.get('lat')
     # longitude = request.args.get('lon')
     # expected_time = request.args.get('time')
-    data = request.get_json('response')
+    result = dict()
+    json = request.get_json('response')
+    for time in json['times']:
+        print(json['times'][f'{time}'])
+
     import pdb
     pdb.set_trace()
-    return jsonify({'test':'this'})
+    return jsonify(result)
 
     

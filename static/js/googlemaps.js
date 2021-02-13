@@ -97,12 +97,13 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         },
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      function (response, status) {
+      async function (response, status) {
         if (status === "OK") {
             directionsRenderer.setDirections(response);
             console.log(response);
             const parsedResponse = parseResponseForLocations(response);
-            axios.get('/get-weather-report', parsedResponse);
+            response = await axios.post('/get-weather-report', parsedResponse);
+            console.log(response);
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -159,13 +160,13 @@ const parseResponseForLocations = (response)=>{
     // let startTime = new Date().toISOString();
     let time = new Date();
 
-    let endTime = time;
+    let endTime = new Date(time);
     let tripDuration = response.routes[0].legs[0].duration.text;
-
-    //add end pt and time to the result as result[0]
     [minutes, hours] = extractHoursMinutes(tripDuration);
     endTime.setHours(endTime.getHours() + hours);
     endTime.setMinutes(endTime.getMinutes() + minutes);
+    
+    //add end pt and time to the result as result[0]
     result.times[0] = formatDateForWeatherBit(endTime);
     result.locations[0] = response.routes[0].legs[0].end_address;
     
@@ -173,9 +174,6 @@ const parseResponseForLocations = (response)=>{
     result.times[1] = formatDateForWeatherBit(time);
     result.locations[1] = response.routes[0].legs[0].start_address;
     let resultCounter = 2;
-    
-    let minutesTillOneHour = 60;
-    let feetTillMile = 5280;
     
     
     /*
@@ -193,12 +191,33 @@ const parseResponseForLocations = (response)=>{
     steps.forEach((step)=>{
 
         //update time
+        const priorStepHour = time.getHours(); 
         const [minutes, hours] = extractHoursMinutes(step.duration.text);
         time.setMinutes(time.getMinutes() + minutes);
         time.setHours(time.getHours() + hours);
 
-        
-        
+        const numberOfHoursOnStep = time.getHours() - priorStepHour;
+        if(numberOfHoursOnStep > 0 && hours === 0){
+            //     time = time.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
+
+            const newResultTime = formatDateForWeatherBit(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+            result.times[resultCounter] = newResultTime;
+            const lat = step.path[Math.floor(step.path.length/2)].lat();
+            const lng = step.path[Math.floor(step.path.length/2)].lng();
+            result.locations[resultCounter] = `${lat}, ${lng}`;
+            resultCounter++;
+
+        }else if(hours > 0){
+            const stepPathTimeRatio = step.path.length/numberOfHoursOnStep;
+            for(let i = 0; i < numberOfHoursOnStep; i++){
+                //get locations for step
+                const timeAtIHour = time.getHours - (numberOfHoursOnStep + i);
+                const newResultTime = formatDateForWeatherBit(timeAtIHour).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+                result.times[resultCounter] = newResultTime;
+                result.location[resultCounter] = `${step.path[step.path.length * i].lat()}, ${step.path[step.path.length * i].long()}`;
+                resultCounter++;
+            }
+        }
     });
     return result;
 }
