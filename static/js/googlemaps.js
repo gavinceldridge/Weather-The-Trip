@@ -191,8 +191,15 @@ const parseResponseForLocations = (response)=>{
         const [minutes, hours] = extractHoursMinutes(step.duration.text);
         time.setMinutes(time.getMinutes() + minutes);
         time.setHours(time.getHours() + hours);
-
-        const numberOfHoursOnStep = time.getHours() - priorStepHour;
+        if(hours == 0){
+            const numberOfHoursOnStep = time.getHours() - priorStepHour;
+        }else{
+            let extra = 0;
+            if(minutes + time.getMinutes() > 59){
+                extra = 1;
+            }
+            const numberOfHoursOnStep = hours + extra;
+        }
         if(numberOfHoursOnStep > 0 && hours === 0){
             //     time = time.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
 
