@@ -7,10 +7,10 @@ import re
 api = Blueprint('api', __name__, template_folder="templates")
 
 
-try:
-    from pws import WEATHER_KEY
-except:
-    WEATHER_KEY = os.environ.get('WEATHER_KEY')
+# try:
+#     from pws import WEATHER_KEY
+# except:
+WEATHER_KEY = os.environ.get('WEATHER_KEY')
 
 
 # @api.route("/directions")

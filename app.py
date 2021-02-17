@@ -13,10 +13,10 @@ import os
 app = Flask(__name__)
 app.register_blueprint(api)
 # DEVELOPMENT
-try:
-    from pws import GOOGLE_MAPS_KEY
-except:
-    GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
+# try:
+#     from pws import GOOGLE_MAPS_KEY
+# except:
+GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///weather_the_trip')
 db.init_app(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
