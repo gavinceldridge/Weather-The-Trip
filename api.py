@@ -12,6 +12,7 @@ api = Blueprint('api', __name__, template_folder="templates")
 #     from pws import GOOGLE_MAPS_KEY
 # except:
 WEATHER_KEY = os.environ.get('WEATHER_KEY')
+GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 
 
 # @api.route("/directions")
