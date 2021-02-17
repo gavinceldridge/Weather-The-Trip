@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from forms import TripForm
 import requests
-from pws import GOOGLE_MAPS_KEY
 import re
 
 api = Blueprint('api', __name__, template_folder="templates")
