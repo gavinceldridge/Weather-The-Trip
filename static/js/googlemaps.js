@@ -204,7 +204,7 @@ const parseResponseForLocations = (response)=>{
             resultCounter++;
 
         }else if(hours > 0){
-            const stepPathTimeRatio = Math.floor(step.path.length-1)/numberOfHoursOnStep;
+            const stepPathTimeRatio = Math.floor((step.path.length-1)/numberOfHoursOnStep);
             for(let i = 0; i < numberOfHoursOnStep; i++){
                 //get locations for step
                 let timeAtIHour = new Date(time);
