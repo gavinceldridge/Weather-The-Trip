@@ -2,12 +2,8 @@
 
 from wtforms import SelectField, StringField, PasswordField
 from flask_wtf import FlaskForm
+from models import User
 from wtforms.validators import InputRequired, Optional, Length
-
-
-class LocationForm(FlaskForm):
-    """Form for adding playlists."""
-    location = StringField("Location", validators=[InputRequired()])
 
 
 class TripForm(FlaskForm):
@@ -17,11 +13,11 @@ class TripForm(FlaskForm):
 
 class UserAddForm(FlaskForm):
     """Form for adding users."""
-
-    first_name = StringField('First Name', validators=[InputRequired()])
-    last_name = StringField('Last Name', validators=[InputRequired()])
-    email = StringField('Email', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[Length(min=6)])
+    
+    first_name = StringField('First Name', validators=[InputRequired(message='Enter your name please')])
+    last_name = StringField('Last Name', validators=[InputRequired(message='Enter your name please')])
+    email = StringField('Email', validators=[InputRequired(message='Please enter an Email')])
+    password = PasswordField('Password', validators=[Length(min=6, message='Password must be at least 6 characters')])
 
 
 class LoginForm(FlaskForm):

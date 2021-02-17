@@ -4,7 +4,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 # from flask_mail import Message, Mail
 # from threading import Thread
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
-from forms import TripForm, LocationForm, LoginForm
+from forms import TripForm, LoginForm, UserAddForm
 from api import api
 import os
 
@@ -59,6 +59,29 @@ def login():
             flash('Incorrect email or password!', 'danger')
 
     return redirect('/')
+
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    login_form = LoginForm()
+    signup_form = UserAddForm()
+    if signup_form.validate_on_submit():
+        email = signup_form.email.data
+        password = signup_form.password.data
+        first_name = signup_form.first_name.data
+        last_name = signup_form.last_name.data
+        new_user = User.signup(first_name, last_name, email, password)
+        is_email_taken = User.query.filter(User.email == email).all()
+        if(is_email_taken == []):
+                
+            db.session.add(new_user)
+            db.session.commit()
+            flash(f'Thanks for signing up, {first_name}', 'success')
+            return redirect('/')
+        else:
+            flash('Email already taken, try again', 'danger')
+        
+    return render_template('signup.html', signup_form = signup_form, login_form=login_form)
+
 
 
 @app.route('/logout')

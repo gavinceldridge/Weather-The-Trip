@@ -83,6 +83,7 @@ class User(db.Model):
         db.Text,
         nullable=False
     )
+    
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"

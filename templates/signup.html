@@ -1,0 +1,84 @@
+{%extends 'base.html'%}
+
+{%block title%}Sign Up{%endblock%}
+
+{%block body%}
+<div class="container-fluid">
+    
+    <form id='login-form' action="/signup" method='POST'>
+        {{signup_form.csrf_token}}
+        {{signup_form.hidden_tag()}}
+
+        {% for field in signup_form
+            if field.widget.input_type != 'hidden' %}
+            <p class='text-danger text-center'>
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </p>
+        {% endfor %}
+
+        <div class="row">
+
+            <div class="col-8 offset-2">
+        
+                    
+                <div class="input-group mb-3">
+                        
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">First Name</span>
+                    </div>
+                    {{signup_form.first_name(id='first-name', placeholder='First Name', type='text', class_='form-control')}}
+
+                </div>
+                    
+                    
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Last Name</span>
+                    </div>
+                    {{signup_form.last_name(id='last-name', placeholder='Last Name', type='text', class_='form-control')}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Email</span>
+                    </div>
+                    {{signup_form.email(id='email_input', placeholder='Email', class_='form-control')}}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Password</span>
+                    </div>
+                    {{signup_form.password(id='password', placeholder='Password', type='password', class_='form-control')}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 offset-2">
+                <input type="submit" class='form-control btn btn-success' value='Log in'>
+            </div>
+        </div>
+            
+            
+        </form>
+</div>
+        
+{%endblock%}
+        

@@ -103,7 +103,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
             console.log(response);
             const parsedResponse = parseResponseForLocations(response);
             response = await axios.post('/get-weather-report', parsedResponse);
-            console.log(response);
+            displayWeatherResults(response);            
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -166,14 +166,10 @@ const parseResponseForLocations = (response)=>{
     endTime.setHours(endTime.getHours() + hours);
     endTime.setMinutes(endTime.getMinutes() + minutes);
     
-    //add end pt and time to the result as result[0]
-    result.times[0] = formatDateForWeatherBit(endTime);
-    result.locations[0] = response.routes[0].legs[0].end_address;
-    
     // add start time/location to the result as result[1]
-    result.times[1] = formatDateForWeatherBit(time);
-    result.locations[1] = response.routes[0].legs[0].start_address;
-    let resultCounter = 2;
+    result.times[0] = formatDateForWeatherBit(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+    result.locations[0] = `${response.routes[0].legs[0].steps[0].path[0].lat()}, ${response.routes[0].legs[0].steps[0].path[0].lng()}`;
+    let resultCounter = 1;
     
     
     /*
@@ -219,5 +215,43 @@ const parseResponseForLocations = (response)=>{
             }
         }
     });
+
+    //add end pt and time to the result as result[0]
+    result.times[resultCounter] = formatDateForWeatherBit(endTime).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+    result.locations[resultCounter] = `${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lat()}, ${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lng()}`;
+      
     return result;
+}
+
+const displayWeatherResults = (weatherResults)=>{
+    const resultTable = document.querySelector('#weather-results');
+
+    //refresh results
+    for(child in resultTable.children){
+        resultTable.removeChild(child);
+    }
+    
+    for(index in weatherResults.data.times){
+        
+        const tr = document.createElement('tr');
+        
+        const time = document.createElement('th');
+        time.innerText = weatherResults.data.times[index];
+
+        const location = document.createElement('td');
+        location.innerText = weatherResults.data.locations[index];
+
+        const description = document.createElement('td');
+        description.innerText = weatherResults.data.results[index].substring(6, weatherResults.data.results[index].length)
+
+        const code = document.createElement('td');
+        code.innerText = weatherResults.data.results[index].substring(0, 4);
+
+        tr.appendChild(time);
+        tr.appendChild(location);
+        tr.appendChild(description);
+        tr.appendChild(code);
+        resultTable.appendChild(tr);
+    }
+
 }
