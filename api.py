@@ -9,6 +9,7 @@ api = Blueprint('api', __name__, template_folder="templates")
 
 # try:
 #     from pws import WEATHER_KEY
+#     from pws import GOOGLE_MAPS_KEY
 # except:
 WEATHER_KEY = os.environ.get('WEATHER_KEY')
 
@@ -42,15 +43,11 @@ def weather():
         weather_info = requests.get(f'https://api.weatherbit.io/v2.0/forecast/hourly?key={WEATHER_KEY}&hours=48&lat={lat}&lon={lng}')
         weather_json = weather_info.json()
         for i in range(0, len(weather_json['data'])):
-            # print(f'time: {time}\njson["times"][time]: {json["times"][time]}\nresult: {result}\nweather_json["data"][i]["timestamp"]: {weather_json["data"][i]["timestamp_local"]}')
             if json['times'][time] == weather_json['data'][i]['timestamp_local']:
-                # if(result == {}):
-                #     result['times'] = {time: json['times'][time]}
-                #     result['locations'] = {time: location}
-                #     result['results'] = {time: f"{weather_json['data'][i]['weather']['code']} : {weather_json['data'][i]['weather']['description']}"}
-                # else:     
+                
+                reverse_geo_coded_lat_lng = requests.get(f'https://maps.googleapis.com/maps/api/geocode/json?key={GOOGLE_MAPS_KEY}&latlng={location}').json()['results'][0]['formatted_address']
                 result['times'].update({time: json['times'][time]})
-                result['locations'].update({time: location})
+                result['locations'].update({time: reverse_geo_coded_lat_lng})
                 result['results'].update({time: f"{weather_json['data'][i]['weather']['code']} : {weather_json['data'][i]['weather']['description']}"})
     return jsonify(result)
 

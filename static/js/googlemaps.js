@@ -204,13 +204,14 @@ const parseResponseForLocations = (response)=>{
             resultCounter++;
 
         }else if(hours > 0){
-            const stepPathTimeRatio = step.path.length/numberOfHoursOnStep;
+            const stepPathTimeRatio = Math.floor(step.path.length-1)/numberOfHoursOnStep;
             for(let i = 0; i < numberOfHoursOnStep; i++){
                 //get locations for step
-                const timeAtIHour = time.getHours - (numberOfHoursOnStep + i);
+                let timeAtIHour = new Date(time);
+                timeAtIHour.setHours(time.getHours() - (numberOfHoursOnStep + i));
                 const newResultTime = formatDateForWeatherBit(timeAtIHour).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
                 result.times[resultCounter] = newResultTime;
-                result.location[resultCounter] = `${step.path[step.path.length * i].lat()}, ${step.path[step.path.length * i].long()}`;
+                result.locations[resultCounter] = `${step.path[stepPathTimeRatio * i].lat()}, ${step.path[stepPathTimeRatio * i].lng()}`;
                 resultCounter++;
             }
         }
@@ -226,11 +227,11 @@ const parseResponseForLocations = (response)=>{
 const displayWeatherResults = (weatherResults)=>{
     const resultTable = document.querySelector('#weather-results');
 
-    //refresh results
-    for(child in resultTable.children){
-        resultTable.removeChild(child);
+    //reset results
+    while(resultTable.children.length > 0){
+        resultTable.removeChild(resultTable.children[0])
     }
-    
+
     for(index in weatherResults.data.times){
         
         const tr = document.createElement('tr');
