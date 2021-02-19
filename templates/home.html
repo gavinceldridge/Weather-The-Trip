@@ -28,8 +28,15 @@
 
   <div class="container-fluid">
     <div class="row" style="height:100%;">
-      <div class="col-md-12 col-lg-3 sidebar">
-        <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
+      <div class="col-12 main" style="height:100%; width:100%;">
+          
+        <div style="height:100%; width:100%;">
+          <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+          <div id="map" style="height:50rem"></div>
+        </div>
+        
+      </div>
+      <div class="col-12 col-lg-12 sidebar">
         <div class='d-flex align-items-center justify-items-center'>
           
           
@@ -41,6 +48,7 @@
             <div class="form-group">
               <div class="input-group mb-3" id='direction-inputs'>
                 <div class="input-group-append mr-1">
+                  <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
                   {{directions_form.start(id='origin', placeholder='Origin', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='origin-trash' ><i class="fas fa-trash-alt"></i></button>
                   <!-- <input class="form-control" type="text" id='origin-input' placeholder="Origin" readonly> <button class='badge badge-danger' id='origin-trash' style='height: 50%;'><i class="fas fa-trash-alt"></i></button> -->
                 </div>
@@ -56,15 +64,7 @@
           </form>
         </div>
       </div>
-      <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="height:100%; width:100%;"> -->
-        <div class="col-md-12 col-lg-9 main" style="height:100%; width:100%;">
-          
-          <div style="height:100%; width:100%;">
-            <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-            <div id="map" style="height:50rem"></div>
-          </div>
-          
-        </div>
+        
       </div>
       <div class="row">
         <div class="col-12">
@@ -108,4 +108,9 @@
     {%endblock%}
     
     {%block after_scripts%}
+    
+    <!-- TESTING WITH JASMINE -->
+    <script src="test_googlemaps.js"></script>
+    <!-- TESTING WITH JASMINE -->
+
     {%endblock%}

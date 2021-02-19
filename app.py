@@ -15,14 +15,14 @@ app.register_blueprint(api)
 
 
 # DEVELOPMENT
-# from pws import GOOGLE_MAPS_KEY
+from pws import GOOGLE_MAPS_KEY
 
 # PRODUCTION
-GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
+# GOOGLE_MAPS_KY = os.environ.get('GOOGLE_MAPS_KEY')
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///weather_the_trip')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///test_weather_the_trip')
 db.init_app(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_ECHO'] = True
@@ -32,7 +32,6 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
 debug = DebugToolbarExtension(app)
 
 db.init_app(app)
-
 
 
 @app.before_request

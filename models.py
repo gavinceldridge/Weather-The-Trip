@@ -86,7 +86,7 @@ class User(db.Model):
     
 
     def __repr__(self):
-        return f"<User #{self.id}: {self.username}, {self.email}>"
+        return f"<User #{self.id}: {self.first_name}, {self.last_name}, {self.email}>"
 
     @classmethod
     def signup(cls, first_name, last_name, email, password):
