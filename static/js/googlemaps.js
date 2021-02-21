@@ -100,10 +100,10 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         async function (response, status) {
             if (status === "OK") {
                 directionsRenderer.setDirections(response);
-                // console.log(response);
                 const parsedResponse = parseResponseForLocations(response);
                 response = await axios.post('/get-weather-report', parsedResponse);
                 displayWeatherResults(response);            
+                window.scrollTo(0,document.body.scrollHeight);// scroll to the bottom of the page, https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
             } else {
                 window.alert("Directions request failed due to " + status);
             }
@@ -151,7 +151,6 @@ const extractHoursMinutes = (duration)=>{
 }
 
 const parseResponseForLocations = (response)=>{
-    //NOTE: result's first 2 values are predetermined to be the end pt and start pt respectively
     const result = {times: {}, locations: {}};
 
     // let startTime = new Date().toISOString();
@@ -170,16 +169,10 @@ const parseResponseForLocations = (response)=>{
     
     
     /*
-    
     UPDATE TIME
-
-    Then, for each hour, record a timestamp of where the driver *should* be
-    and add to the array.
-    
-    
+    For each hour, record a timestamp of where the driver *should* be
+    and add to the array. 
     */
-    let miles = 0;
-    let feet = 0;
     steps = response.routes[0].legs[0].steps;
     steps.forEach((step)=>{
 
@@ -222,7 +215,7 @@ const parseResponseForLocations = (response)=>{
         }
     });
 
-    //add end pt and time to the result as result[0]
+    //add end pt and time to the result
     result.times[resultCounter] = formatDateForWeatherBit(endTime).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
     result.locations[resultCounter] = `${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lat()}, ${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lng()}`;
       

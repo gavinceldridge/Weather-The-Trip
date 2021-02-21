@@ -15,18 +15,14 @@
     src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
     defer></script>
 <script src='/static/js/googlemaps.js'></script>
-<!-- TESTING WITH JASMINE -->
-<!-- <script src="/tests/test_googlemaps.js"></script> -->
-<!-- TESTING WITH JASMINE -->
+
 
 {%endblock%}
 {%block title%}Weather The Trip{%endblock%}
 
 
 {%block body%}
-<!-- 
-<input type="text" id='pac-input' class='controls' placeholder="Start typing here">
-<div id="map" style="height:90%; width:100% "></div> -->
+
 <main>
 
   <div class="container-fluid">
@@ -35,7 +31,7 @@
           
         <div style="height:100%; width:100%;">
           <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-          <div id="map" style="height:50rem"></div>
+          <div id="map" style="height:40rem"></div><br>
         </div>
         
       </div>
@@ -48,21 +44,18 @@
             {{directions_form.csrf_token}}
             {{directions_form.hidden_tag()}}
             
+            <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
             <div class="form-group">
               <div class="input-group mb-3" id='direction-inputs'>
-                <div class="input-group-append mr-1">
-                  <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
+                <div class="input-group-append">
                   {{directions_form.start(id='origin', placeholder='Origin', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='origin-trash' ><i class="fas fa-trash-alt"></i></button>
-                  <!-- <input class="form-control" type="text" id='origin-input' placeholder="Origin" readonly> <button class='badge badge-danger' id='origin-trash' style='height: 50%;'><i class="fas fa-trash-alt"></i></button> -->
                 </div>
                 <div class="input-group-append">
                   {{directions_form.end(id='destination', placeholder='Destination', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='destination-trash'><i class="fas fa-trash-alt"></i></button>
                   
-                  <!-- <input class="form-control" type="text" id='destination-input' placeholder="Destination" readonly> <button class='badge badge-danger' id='destination-trash' style='height: 50%;'><i class="fas fa-trash-alt"></i></button> -->
+                  <input type="submit" class='btn btn-primary' id='submit-calculations'>
                 </div>
               </div>
-              <!-- <label for="origin">Origin</label> -->
-              <input type="submit" class='btn btn-primary mt-3' id='submit-calculations'>
             </div>
           </form>
         </div>
@@ -82,24 +75,7 @@
               </tr>
             </thead>
             <tbody id='weather-results'>
-              <!-- <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-              </tr> -->
+              
             </tbody>
           </table>
         </div>
