@@ -1,8 +1,5 @@
 from flask import Flask, request, redirect, render_template, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
-# from flask_wtf import FlaskForm
-# from flask_mail import Message, Mail
-# from threading import Thread
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
 from forms import TripForm, LoginForm, UserAddForm
 from api import api
@@ -14,18 +11,16 @@ app.register_blueprint(api)
 
 
 # DEVELOPMENT
-from pws import GOOGLE_MAPS_KEY
+# from pws import GOOGLE_MAPS_KEY
 
 # PRODUCTION
-# GOOGLE_MAPS_KY = os.environ.get('GOOGLE_MAPS_KEY')
+GOOGLE_MAPS_KY = os.environ.get('GOOGLE_MAPS_KEY')
 
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///test_weather_the_trip')
 db.init_app(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_ECHO'] = True
-# use secret key in production or default to our dev one
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'backupkey')
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
 debug = DebugToolbarExtension(app)

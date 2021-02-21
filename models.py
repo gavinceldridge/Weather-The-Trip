@@ -54,7 +54,7 @@ class UserTrip(db.Model):
 
 
 class User(db.Model):
-    """User in the system."""
+    """User model to save data to individuals"""
 
     __tablename__ = 'users'
 
@@ -90,14 +90,10 @@ class User(db.Model):
 
     @classmethod
     def signup(cls, first_name, last_name, email, password):
-        """Sign up user.
-
-        Hashes password and adds user to system.
-        """
+        """Sign up new user, hash the password, and return user instance"""
 
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
-        # import pdb
-        # pdb.set_trace()
+        
 
         user = User(
             first_name=first_name,
@@ -110,14 +106,7 @@ class User(db.Model):
 
     @classmethod
     def authenticate(cls, email, password):
-        """Find user with `username` and `password`.
-
-        This is a class method (call it on the class, not an individual user.)
-        It searches for a user whose password hash matches this password
-        and, if it finds such a user, returns that user object.
-
-        If can't find matching user (or if password is wrong), returns False.
-        """
+        '''authenticate the use given the correct email and password combo'''
 
         user = cls.query.filter_by(email=email).first()
 
