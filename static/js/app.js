@@ -1,8 +1,5 @@
 $(document).ready(function () {
 
-    
-
-
     //Map Plot Trash Items:
     $('.trash').click((evt)=>{
         // console.log(evt)

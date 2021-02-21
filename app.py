@@ -8,10 +8,9 @@ from forms import TripForm, LoginForm, UserAddForm
 from api import api
 import os
 
-
-
 app = Flask(__name__)
 app.register_blueprint(api)
+
 
 
 # DEVELOPMENT

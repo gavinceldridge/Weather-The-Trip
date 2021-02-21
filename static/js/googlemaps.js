@@ -88,36 +88,34 @@ function initAutocomplete() {
 
 function calculateAndDisplayRoute(directionsService, directionsRenderer) {
     directionsService.route(
-      {
-        origin: {
-          query: document.getElementById("origin").value,
+        {
+            origin: {
+            query: document.getElementById("origin").value,
+            },
+            destination: {
+            query: document.getElementById("destination").value,
+            },
+            travelMode: google.maps.TravelMode.DRIVING,
         },
-        destination: {
-          query: document.getElementById("destination").value,
-        },
-        travelMode: google.maps.TravelMode.DRIVING,
-      },
-      async function (response, status) {
-        if (status === "OK") {
-            directionsRenderer.setDirections(response);
-            console.log(response);
-            const parsedResponse = parseResponseForLocations(response);
-            response = await axios.post('/get-weather-report', parsedResponse);
-            displayWeatherResults(response);            
-        } else {
-          window.alert("Directions request failed due to " + status);
+        async function (response, status) {
+            if (status === "OK") {
+                directionsRenderer.setDirections(response);
+                // console.log(response);
+                const parsedResponse = parseResponseForLocations(response);
+                response = await axios.post('/get-weather-report', parsedResponse);
+                displayWeatherResults(response);            
+            } else {
+                window.alert("Directions request failed due to " + status);
+            }
         }
-      }
     );
-  }
+}
 
-
-const update_current_label = ($current)=>{
+const update_current_label = ()=>{
     $inputDivs = $('.input-group-append').get()
     $inputDivs.forEach((element)=>{
         value = element.children[0].value;
         if(value === ''){
-            console.log(value);
             $('#current-label')[0].innerText = element.children[0].placeholder;
             return;
         }
@@ -129,8 +127,7 @@ const append_to_current_direction = (address)=>{
     $current = $('#current-label').get()[0].innerText.toLowerCase();
     // console.log($(`#${current}-input`))
     $(`#${$current}`).get()[0].value=address;
-
-    update_current_label($current);
+    update_current_label();
 }
 
 const formatDateForWeatherBit = (time)=>{

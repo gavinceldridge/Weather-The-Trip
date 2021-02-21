@@ -15,6 +15,9 @@
     src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
     defer></script>
 <script src='/static/js/googlemaps.js'></script>
+<!-- TESTING WITH JASMINE -->
+<!-- <script src="/tests/test_googlemaps.js"></script> -->
+<!-- TESTING WITH JASMINE -->
 
 {%endblock%}
 {%block title%}Weather The Trip{%endblock%}
@@ -109,8 +112,6 @@
     
     {%block after_scripts%}
     
-    <!-- TESTING WITH JASMINE -->
-    <script src="test_googlemaps.js"></script>
-    <!-- TESTING WITH JASMINE -->
+    
 
     {%endblock%}

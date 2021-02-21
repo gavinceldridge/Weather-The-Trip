@@ -30,6 +30,7 @@ def weather():
     # latitude = request.args.get('lat')
     # longitude = request.args.get('lon')
     # expected_time = request.args.get('time')
+    # import pdb; pdb.set_trace()
     result = dict()
     result['times'] = {}
     result['results'] = {}

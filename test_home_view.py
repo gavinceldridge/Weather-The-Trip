@@ -14,7 +14,6 @@ from models import db, User
 os.environ['DATABASE_URL'] = "postgresql:///test_weather_the_trip"
 
 
-
 from app import app
 
 
@@ -29,20 +28,13 @@ class UserModelTestCase(TestCase):
             db.create_all()
 
             u1 = User.signup("first", "last", "email1@email.com", "password")
-            u1.id = 1
-
-            u2 = User.signup("first", "last", "email2@email.com", "password")
-            u2.id = 2
+            db.session.add(u1)
             db.session.commit()
 
             u1 = User.query.get(1)
-            u2 = User.query.get(2)
 
             self.u1 = u1
             self.uid1 = 1
-
-            self.u2 = u2
-            self.uid2 = 2
 
             self.client = app.test_client()
 
@@ -58,7 +50,16 @@ class UserModelTestCase(TestCase):
         response = self.client.get('/')
         html = response.get_data(as_text=True)
         self.assertIn('<a class="navbar-brand" href="/">Weather The Trip</a>', html)
-        import pdb;pdb.set_trace()
 
+    def test_logged_in_user_can_click_old_trips(self):
+
+        user = User.authenticate(self.u1.email, self.u1.password)
+        with app.app_context():
+            with app.session_transaction as sess:
+                sess['email'] = user.email
+        
+        response = self.client.get('/')
+        html = response.get_data(as_text=True)
+        self.assertIn("<a class='nav-link' href='#'>Old Trips</a>", html)
 
 

@@ -5,7 +5,7 @@
 {%block body%}
 <div class="container-fluid">
     
-    <form id='login-form' action="/signup" method='POST'>
+    <form id='signup-form' action="/signup" method='POST'>
         {{signup_form.csrf_token}}
         {{signup_form.hidden_tag()}}
 
