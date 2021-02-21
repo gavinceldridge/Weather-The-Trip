@@ -1,7 +1,7 @@
 # Weather-The-Trip
 
 Web app utilizing Google Maps and Weatherbit to estimate the weather along a trip
-prior to driving and help prevent surprise weather phenomena along the trip.
+prior to driving and help prevent surprise weather phenomena.
 
 
 APIs:
