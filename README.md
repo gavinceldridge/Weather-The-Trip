@@ -20,4 +20,4 @@ APIs used:
  
  - Google Geocoding - https://developers.google.com/maps/documentation/geocoding/overview
  
- - Weatherbit - https://www.weatherbit.io/api?ref=apilist.fun
+ - Weather Information - https://openweathermap.org/
