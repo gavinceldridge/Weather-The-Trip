@@ -101,7 +101,10 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
             if (status === "OK") {
                 directionsRenderer.setDirections(response);
                 const parsedResponse = parseResponseForLocations(response);
+                const spinner = document.getElementById("spinner");
+                spinner.style = "display: inline-block;";
                 response = await axios.post('/get-weather-report', parsedResponse);
+                spinner.style = "display: none;";
                 displayWeatherResults(response);
                 window.scrollTo(0, document.body.scrollHeight);// scroll to the bottom of the page, https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
             } else {
@@ -223,6 +226,17 @@ const parseResponseForLocations = (response) => {
     return result;
 }
 
+const convertResultTimeToLocalTime = (time) => {
+    console.log(time);
+
+    const re = /(\d{4})-(\d{2})-(\d{2})T(\d{2})/
+    let matches = time.match(re);
+    console.log(matches);
+    const formattedDate = new Date(Date.UTC(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3]), parseInt(matches[4])));
+
+    return `${formattedDate.getMonth()}/${formattedDate.getDate()} : ${formattedDate.getHours()} - ${formattedDate.getFullYear()}`;
+}
+
 const displayWeatherResults = (weatherResults) => {
     const resultTable = document.querySelector('#weather-results');
 
@@ -236,7 +250,8 @@ const displayWeatherResults = (weatherResults) => {
         const tr = document.createElement('tr');
 
         const time = document.createElement('th');
-        time.innerText = weatherResults.data.times[index];
+
+        time.innerText = convertResultTimeToLocalTime(weatherResults.data.times[index]);
 
         const location = document.createElement('td');
         location.innerText = weatherResults.data.locations[index];

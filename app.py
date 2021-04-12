@@ -1,4 +1,3 @@
-from pws import GOOGLE_MAPS_KEY
 from flask import Flask, request, redirect, render_template, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
@@ -11,17 +10,18 @@ app.register_blueprint(api)
 
 
 # DEVELOPMENT
+# from pws import GOOGLE_MAPS_KEY
 
 # PRODUCTION
-# GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
+GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
     'DATABASE_URL', 'postgresql:///test_weather_the_trip')
 db.init_app(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'backupkey')
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False  # DEVELOPMENT
 debug = DebugToolbarExtension(app)
 
 db.init_app(app)

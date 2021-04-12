@@ -3,7 +3,9 @@
 {%block before_scripts%}
 
 <!-- Axios -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"
+  integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ=="
+  crossorigin="anonymous"></script>
 
 <!-- Custom JS -->
 <script src='/static/js/app.js'></script>
@@ -12,8 +14,8 @@
 <link rel="stylesheet" type="text/css" href="/static/css/googlemaps.css" />
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
-    defer></script>
+  src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_KEY}}&callback=initAutocomplete&libraries=places&v=weekly"
+  defer></script>
 <script src='/static/js/googlemaps.js'></script>
 
 
@@ -28,31 +30,35 @@
   <div class="container-fluid">
     <div class="row" style="height:100%;">
       <div class="col-12 main" style="height:100%; width:100%;">
-          
+
         <div style="height:100%; width:100%;">
           <input id="pac-input" class="controls" type="text" placeholder="Search Box">
           <div id="map" style="height:40rem"></div><br>
         </div>
-        
+
       </div>
       <div class="col-12 col-lg-12 sidebar">
         <div class='d-flex align-items-center justify-items-center'>
-          
-          
+
+
           <!-- <button class='btn btn-primary'>Confirm</button> -->
           <form>
             {{directions_form.csrf_token}}
             {{directions_form.hidden_tag()}}
-            
+
             <p class="lead text-light">Current: <span id='current-label'>Origin</span></p>
             <div class="form-group">
               <div class="input-group mb-3" id='direction-inputs'>
                 <div class="input-group-append">
-                  {{directions_form.start(id='origin', placeholder='Origin', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='origin-trash' ><i class="fas fa-trash-alt"></i></button>
+                  {{directions_form.start(id='origin', placeholder='Origin', readonly=True, class_='text-dark')}}
+                  <button class='badge badge-danger trash' type='button' id='origin-trash'><i
+                      class="fas fa-trash-alt"></i></button>
                 </div>
                 <div class="input-group-append">
-                  {{directions_form.end(id='destination', placeholder='Destination', readonly=True, class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='destination-trash'><i class="fas fa-trash-alt"></i></button>
-                  
+                  {{directions_form.end(id='destination', placeholder='Destination', readonly=True,
+                  class_='text-dark')}} <button class='badge badge-danger trash' type='button' id='destination-trash'><i
+                      class="fas fa-trash-alt"></i></button>
+
                   <input type="submit" class='btn btn-primary' id='submit-calculations'>
                 </div>
               </div>
@@ -60,34 +66,37 @@
           </form>
         </div>
       </div>
-        
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <h2 class="display-4 text-info text-center">Weather Results</h2>
-          <table class="table table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Time</th>
-                <th scope="col">Location</th>
-                <th scope="col">Description</th>
-                <th scope="col"><a href="https://www.weatherbit.io/api/codes">Weather Code</a></th>
-              </tr>
-            </thead>
-            <tbody id='weather-results'>
-              
-            </tbody>
-          </table>
+
+    </div>
+    <div class="row text-center">
+      <div class="col-12">
+        <h2 class="display-4 text-info text-center">Weather Results</h2>
+        <div class="spinner-border mb-3 text-info" style="display: none;" role="status" id='spinner'>
+          <span class="sr-only">Loading...</span>
         </div>
+        <table class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Location</th>
+              <th scope="col">Description</th>
+              <th scope="col"><a href="https://openweathermap.org/weather-conditions">Weather Code</a></th>
+            </tr>
+          </thead>
+          <tbody id='weather-results'>
+
+          </tbody>
+        </table>
       </div>
     </div>
-  </main>
-    
-    
-    {%endblock%}
-    
-    {%block after_scripts%}
-    
-    
+  </div>
+</main>
 
-    {%endblock%}
+
+{%endblock%}
+
+{%block after_scripts%}
+
+
+
+{%endblock%}
