@@ -1,3 +1,4 @@
+from pws import GOOGLE_MAPS_KEY
 from flask import Flask, request, redirect, render_template, flash, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Trip, UserTrip, Weather, TripWeather
@@ -9,16 +10,14 @@ app = Flask(__name__)
 app.register_blueprint(api)
 
 
-
 # DEVELOPMENT
-# from pws import GOOGLE_MAPS_KEY
 
 # PRODUCTION
-GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
+# GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
 
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql:///test_weather_the_trip')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql:///test_weather_the_trip')
 db.init_app(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'backupkey')
@@ -58,6 +57,7 @@ def login():
 
     return redirect('/')
 
+
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
     login_form = LoginForm()
@@ -70,16 +70,15 @@ def signup():
         new_user = User.signup(first_name, last_name, email, password)
         is_email_taken = User.query.filter(User.email == email).all()
         if(is_email_taken == []):
-                
+
             db.session.add(new_user)
             db.session.commit()
             flash(f'Thanks for signing up, {first_name}', 'success')
             return redirect('/')
         else:
             flash('Email already taken, try again', 'danger')
-        
-    return render_template('signup.html', signup_form = signup_form, login_form=login_form)
 
+    return render_template('signup.html', signup_form=signup_form, login_form=login_form)
 
 
 @app.route('/logout')

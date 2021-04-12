@@ -16,7 +16,7 @@ function initAutocomplete() {
         mapTypeId: "roadmap",
     });
     directionsRenderer.setMap(map);
-    
+
     const onSubmitHandler = function (evt) {
         evt.preventDefault();
         calculateAndDisplayRoute(directionsService, directionsRenderer);
@@ -80,9 +80,9 @@ function initAutocomplete() {
         });
         map.fitBounds(bounds);
 
-        const formatted_address = searchBox.getPlaces()[0].formatted_address;        
+        const formatted_address = searchBox.getPlaces()[0].formatted_address;
         append_to_current_direction(formatted_address);
-        
+
     });
 }
 
@@ -90,10 +90,10 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
     directionsService.route(
         {
             origin: {
-            query: document.getElementById("origin").value,
+                query: document.getElementById("origin").value,
             },
             destination: {
-            query: document.getElementById("destination").value,
+                query: document.getElementById("destination").value,
             },
             travelMode: google.maps.TravelMode.DRIVING,
         },
@@ -102,8 +102,8 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
                 directionsRenderer.setDirections(response);
                 const parsedResponse = parseResponseForLocations(response);
                 response = await axios.post('/get-weather-report', parsedResponse);
-                displayWeatherResults(response);            
-                window.scrollTo(0,document.body.scrollHeight);// scroll to the bottom of the page, https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
+                displayWeatherResults(response);
+                window.scrollTo(0, document.body.scrollHeight);// scroll to the bottom of the page, https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
             } else {
                 window.alert("Directions request failed due to " + status);
             }
@@ -111,11 +111,11 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer) {
     );
 }
 
-const update_current_label = ()=>{
+const update_current_label = () => {
     $inputDivs = $('.input-group-append').get()
-    $inputDivs.forEach((element)=>{
+    $inputDivs.forEach((element) => {
         value = element.children[0].value;
-        if(value === ''){
+        if (value === '') {
             $('#current-label')[0].innerText = element.children[0].placeholder;
             return;
         }
@@ -123,35 +123,35 @@ const update_current_label = ()=>{
 
 }
 
-const append_to_current_direction = (address)=>{
+const append_to_current_direction = (address) => {
     $current = $('#current-label').get()[0].innerText.toLowerCase();
     // console.log($(`#${current}-input`))
-    $(`#${$current}`).get()[0].value=address;
+    $(`#${$current}`).get()[0].value = address;
     update_current_label();
 }
 
-const formatDateForWeatherBit = (time)=>{
+const formatDateForWeatherAPI = (time) => {
     //regex to match JS Date UTC time to the weather UTC time
     time = time.toISOString();
     time = time.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
     return time;
 }
 
-const extractHoursMinutes = (duration)=>{
+const extractHoursMinutes = (duration) => {
     let minutes = 0;
     let hours = 0;
 
-    if(duration.includes('hour')){
+    if (duration.includes('hour')) {
         hours = parseInt(duration.match(/(\d+)\shour/)[1]);
     }
-    if(duration.includes('min')){
+    if (duration.includes('min')) {
         minutes = parseInt(duration.match(/(\d+)\smin/)[1]);
     }
     return [minutes, hours];
 }
 
-const parseResponseForLocations = (response)=>{
-    const result = {times: {}, locations: {}};
+const parseResponseForLocations = (response) => {
+    const result = { times: {}, locations: {} };
 
     // let startTime = new Date().toISOString();
     let time = new Date();
@@ -161,53 +161,54 @@ const parseResponseForLocations = (response)=>{
     [minutes, hours] = extractHoursMinutes(tripDuration);
     endTime.setHours(endTime.getHours() + hours);
     endTime.setMinutes(endTime.getMinutes() + minutes);
-    
+
     // add start time/location to the result as result[1]
-    result.times[0] = formatDateForWeatherBit(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+    result.times[0] = formatDateForWeatherAPI(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
     result.locations[0] = `${response.routes[0].legs[0].steps[0].path[0].lat()}, ${response.routes[0].legs[0].steps[0].path[0].lng()}`;
     let resultCounter = 1;
-    
-    
+
+    console.log(time, result);
+
     /*
     UPDATE TIME
     For each hour, record a timestamp of where the driver *should* be
     and add to the array. 
     */
     steps = response.routes[0].legs[0].steps;
-    steps.forEach((step)=>{
+    steps.forEach((step) => {
 
         //update time
-        const priorStepHour = time.getHours(); 
+        const priorStepHour = time.getHours();
         const [minutes, hours] = extractHoursMinutes(step.duration.text);
         time.setMinutes(time.getMinutes() + minutes);
         time.setHours(time.getHours() + hours);
         let numberOfHoursOnStep;
-        if(hours == 0){
+        if (hours == 0) {
             numberOfHoursOnStep = time.getHours() - priorStepHour;
-        }else{
+        } else {
             let extra = 0;
-            if(minutes + time.getMinutes() > 59){
+            if (minutes + time.getMinutes() > 59) {
                 extra = 1;
             }
             numberOfHoursOnStep = hours + extra;
         }
-        if(numberOfHoursOnStep > 0 && hours === 0){
+        if (numberOfHoursOnStep > 0 && hours === 0) {
             //     time = time.match(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g)[0];
 
-            const newResultTime = formatDateForWeatherBit(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+            const newResultTime = formatDateForWeatherAPI(time).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
             result.times[resultCounter] = newResultTime;
-            const lat = step.path[Math.floor(step.path.length/2)].lat();
-            const lng = step.path[Math.floor(step.path.length/2)].lng();
+            const lat = step.path[Math.floor(step.path.length / 2)].lat();
+            const lng = step.path[Math.floor(step.path.length / 2)].lng();
             result.locations[resultCounter] = `${lat}, ${lng}`;
             resultCounter++;
 
-        }else if(hours > 0){
-            const stepPathTimeRatio = Math.floor((step.path.length-1)/numberOfHoursOnStep);
-            for(let i = 0; i < numberOfHoursOnStep; i++){
+        } else if (hours > 0) {
+            const stepPathTimeRatio = Math.floor((step.path.length - 1) / numberOfHoursOnStep);
+            for (let i = 0; i < numberOfHoursOnStep; i++) {
                 //get locations for step
                 let timeAtIHour = new Date(time);
                 timeAtIHour.setHours(time.getHours() - (numberOfHoursOnStep + i));
-                const newResultTime = formatDateForWeatherBit(timeAtIHour).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+                const newResultTime = formatDateForWeatherAPI(timeAtIHour).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
                 result.times[resultCounter] = newResultTime;
                 result.locations[resultCounter] = `${step.path[stepPathTimeRatio * i].lat()}, ${step.path[stepPathTimeRatio * i].lng()}`;
                 resultCounter++;
@@ -216,24 +217,24 @@ const parseResponseForLocations = (response)=>{
     });
 
     //add end pt and time to the result
-    result.times[resultCounter] = formatDateForWeatherBit(endTime).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
-    result.locations[resultCounter] = `${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lat()}, ${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length-1].path.length-1].lng()}`;
-      
+    result.times[resultCounter] = formatDateForWeatherAPI(endTime).match(/(\d{4}-\d{2}-\d{2}T\d{2})/)[1] + ':00:00';
+    result.locations[resultCounter] = `${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length - 1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length - 1].path.length - 1].lat()}, ${response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length - 1].path[response.routes[0].legs[0].steps[response.routes[0].legs[0].steps.length - 1].path.length - 1].lng()}`;
+
     return result;
 }
 
-const displayWeatherResults = (weatherResults)=>{
+const displayWeatherResults = (weatherResults) => {
     const resultTable = document.querySelector('#weather-results');
 
     //reset results
-    while(resultTable.children.length > 0){
+    while (resultTable.children.length > 0) {
         resultTable.removeChild(resultTable.children[0])
     }
 
-    for(index in weatherResults.data.times){
-        
+    for (index in weatherResults.data.times) {
+
         const tr = document.createElement('tr');
-        
+
         const time = document.createElement('th');
         time.innerText = weatherResults.data.times[index];
 
